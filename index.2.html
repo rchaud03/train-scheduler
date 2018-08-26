@@ -144,7 +144,7 @@ db.ref("/trainScheduler").on("child_added", function (childSnapshot, prevChildKe
 
   console.log(trainName + " traveling to " + trainDest + " every " + trainFreq);
 
-  $("#train-schedule > t-body").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + "tbd" + "</td><t/r>");
+  $("train-schedule > t-body").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + "tbd" + "</td><t/r>");
 
 
 })// db listener for child_added ends
