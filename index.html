@@ -21,11 +21,17 @@
 </head>
 <body>
     <div id="container">
+            <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                      <h1 class="display-4">Train Scheduler</h1>
+                      <p class="lead">choo-choo, suckas!</p>
+                    </div>
+                  </div>
 
-          <div class="jumbotron" style="background-color: black; color: white">
+          <!-- <div class="jumbotron" style="background-color: black; color: white">
             <h1 class="text-center">Train Scheduler</h1>
             <h3 class="text-center">choo-choo</h3>
-          </div>
+          </div> -->
           <br>
             <table class="table table-hover" id="train-schedule">
                     <thead>
@@ -68,20 +74,20 @@
                   <form>
                     <div class="form-group row">
                       <label for="name-input">Train Name</label>
-                      <input class="form-control" id="name-input" type="text">
+                      <input class="form-control new-inputs" id="name-input" type="text">
                     </div>
                     <div class="form-group row">
                       <label for="destination-input">Destination</label>
-                      <input class="form-control" id="destination-input" type="text">
+                      <input class="form-control new-inputs" id="destination-input" type="text">
                     </div>
                     <div class="form-group row">
                       <label for="frequency-input">Frequency</label>
-                      <input class="form-control" id="frequency-input" type="text">
+                      <input class="form-control new-inputs" id="frequency-input" type="text">
                     </div>
-                    <!-- <div class="form-group row">
-                      <label for="rate-input">Monthly Rate</label>
-                      <input class="form-control" id="rate-input" type="text">
-                    </div> -->
+                    <div class="form-group row">
+                      <label for="rate-input">First arrival time</label>
+                      <input class="form-control new-inputs" id="initial-input" type="text">
+                    </div> 
                     <button class="btn btn-primary" id="add-train-btn" type="submit">Submit</button>
                   </form>
                   
@@ -128,15 +134,17 @@ $("#add-train-btn").on("click", function (event){
   }
 
   //add the values to database
-  db.ref("/trainScheduler").push(newTrain);
+  db.ref("/train-scheduler-homework").push(newTrain);
 
-  console.log("To " + newTrain.destination + " every " + newTrain.frequency + " minutes via " + newTrain.name);
+  console.log("NEW TRAIN ADDED to " + newTrain.destination + " every " + newTrain.frequency + " minutes via " + newTrain.name);
+  
 
   //Remember to clear fields
+  $(".new-inputs").val("");
 
 }) //$(#add-train-btn) ends
 
-db.ref("/trainScheduler").on("child_added", function (childSnapshot, prevChildKey) {
+db.ref("/train-scheduler-homework").on("child_added", function (childSnapshot, prevChildKey) {
 
   var trainDest = childSnapshot.val().destination;
   var trainName = childSnapshot.val().name;
@@ -144,7 +152,7 @@ db.ref("/trainScheduler").on("child_added", function (childSnapshot, prevChildKe
 
   console.log(trainName + " traveling to " + trainDest + " every " + trainFreq);
 
-  $("#train-schedule > t-body").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + "tbd" + "</td><t/r>");
+  $("#train-schedule > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + "tbd" + "</td><t/r>");
 
 
 })// db listener for child_added ends
