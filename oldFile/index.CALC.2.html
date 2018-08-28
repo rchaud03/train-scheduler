@@ -16,45 +16,61 @@
     <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
-    <script src="assets/javascript/code.2.js"></script>
 
 
 </head>
 <body>
     <div id="container">
-        <!-- Jumbotron Starts -->
             <div class="jumbotron jumbotron-fluid">
                     <div class="container">
                       <h1 class="display-4">Train Scheduler</h1>
                       <p class="lead">choo-choo, suckas!</p>
                     </div>
                   </div>
-<!-- Jumbotron Ends -->
+
+          <!-- <div class="jumbotron" style="background-color: black; color: white">
+            <h1 class="text-center">Train Scheduler</h1>
+            <h3 class="text-center">choo-choo</h3>
+          </div> -->
           <br>
-          <!-- Table starts -->
             <table class="table table-hover" id="train-schedule">
                     <thead>
                       <tr>
                         <th scope="col">Train</th>
                         <th scope="col">Destination</th>
                         <th scope="col">Frequency</th>
-                        <th scope="col">Next Train</th>
                         <th scope="col">Minutes away</th>
                       </tr>
                     </thead>
                     <tbody>
+                      <!-- <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">3</th>
+                        <td colspan="2">Larry the Bird</td>
+                        <td>@twitter</td>
+                      </tr> -->
                     </tbody>
               </table>
-              <!-- Table Ends -->
               <br><hr>
-                    <!-- Add train form  -->
+                    <!-- Add train  -->
             <div class="card card-primary">
                 <div class="card-heading">
                   <h3 class="card-title"><strong>Add train</strong></h3>
                 </div>
                 <div class="card-body">
                   
+                  <!-- Entry Form -->
                   <form>
                     <div class="form-group row">
                       <label for="name-input">Train Name</label>
@@ -69,8 +85,7 @@
                       <input class="form-control new-inputs" id="frequency-input" type="text">
                     </div>
                     <div class="form-group row">
-                      <label for="rate-input">First arrival time</label><br>
-                      <p> use military time. Ex. 0900 or 9:00</p>
+                      <label for="rate-input">First arrival time</label>
                       <input class="form-control new-inputs" id="initial-input" type="text">
                     </div> 
                     <button class="btn btn-primary" id="add-train-btn" type="submit">Submit</button>
@@ -79,9 +94,74 @@
                 </div>
                 
               </div>
-              <!-- End form -->
 
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
+  
+    <script type="text/javascript">
+
+      //initializing firebase
+ //    <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
+        <script>
+          // Initialize Firebase
+          var config = {
+            apiKey: "AIzaSyBDM99ZrsLu4tolJ_HzLJdqCH5b0O1RoJo",
+            authDomain: "ronaldtestproject2.firebaseapp.com",
+            databaseURL: "https://ronaldtestproject2.firebaseio.com",
+            projectId: "ronaldtestproject2",
+            storageBucket: "ronaldtestproject2.appspot.com",
+            messagingSenderId: "976377199219"
+          };
+          firebase.initializeApp(config);
+     
+//new variables
+var db = firebase.database();
+
+//button action
+$("#add-train-btn").on("click", function (event){
+  event.preventDefault();
+
+  var trainDest = $("#destination-input").val().trim();
+  var trainName = $("#name-input").val().trim();
+  var trainFreq = $("#frequency-input").val().trim();
+  var firstTrain = $("#initial-input").val().trim();
+
+  //temporary object
+  var newTrain = {
+    name: trainName,
+    destination: trainDest,
+    frequency: trainFreq,
+    firstTrain: firstTrain
+  }
+
+  //add the values to database
+  db.ref("/train-scheduler-homework").push(newTrain);
+
+  console.log("NEW TRAIN ADDED to " + newTrain.destination + " every " + newTrain.frequency + " minutes via " + newTrain.name + " starting at " + firstTrain);
+  
+
+  //Remember to clear fields
+  $(".new-inputs").val("");
+
+}) //$(#add-train-btn) ends
+
+db.ref("/train-scheduler-homework").on("child_added", function (childSnapshot, prevChildKey) {
+
+  var trainDest = childSnapshot.val().destination;
+  var trainName = childSnapshot.val().name;
+  var trainFreq = childSnapshot.val().frequency;
+
+  console.log(trainName + " traveling to " + trainDest + " every " + trainFreq);
+
+  $("#train-schedule > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" + trainFreq + "</td><td>" + "tbd" + "</td><t/r>");
+
+
+})// db listener for child_added ends
+
+
+
+        
+    </script>
 </body>
 </html>
