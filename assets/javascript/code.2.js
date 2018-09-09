@@ -1,3 +1,4 @@
+$(document).ready(function(){
 
           // Initialize Firebase
           var config = {
@@ -78,3 +79,4 @@ db.ref("/train-scheduler-homework").on("child_added", function (childSnapshot, p
 
 
 })// db listener for child_added ends
+});
